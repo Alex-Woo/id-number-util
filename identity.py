@@ -6,6 +6,8 @@ import random
 import re
 # 导入某个模块的部分类或方法
 from datetime import datetime, timedelta
+import csv
+
 
 # 导入常量并重命名
 import constant as const
@@ -68,7 +70,8 @@ class IdNumber(str):
         """随机生成身份证号，sex = 0表示女性，sex = 1表示男性"""
 
         # 随机生成一个区域码(6位数)
-        id_number = str(random.choice(list(const.AREA_INFO.keys())))
+        # id_number = str(random.choice(list(const.AREA_INFO.keys())))
+        id_number = '370481'
         # 限定出生日期范围(8位数)
         start, end = datetime.strptime("1960-01-01", "%Y-%m-%d"), datetime.strptime("2000-12-30", "%Y-%m-%d")
         birth_days = datetime.strftime(start + timedelta(random.randint(0, (end - start).days + 1)), "%Y%m%d")
@@ -82,12 +85,40 @@ class IdNumber(str):
 
 
 if __name__ == '__main__':
-    random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
-    print(IdNumber.generate_id(random_sex))  # 随机生成身份证号
-    print(IdNumber('410326199507103197').area_id)  # 地址编码:410326
-    print(IdNumber('410326199507103197').get_area_name())  # 地址:河南省洛阳市汝阳县
-    print(IdNumber('410326199507103197').get_birthday())  # 生日:1995-7-10
-    print(IdNumber('410326199507103197').get_age())  # 年龄:23(岁)
-    print(IdNumber('410326199507103197').get_sex())  # 性别:1(男)
-    print(IdNumber('410326199507103197').get_check_digit())  # 校验码:7
-    print(IdNumber.verify_id('410326199507103198'))  # 检验身份证是否正确:False
+      # 随机生成男(1)或女(0)
+    # print(IdNumber.generate_id(random_sex))  # 随机生成身份证号
+    i=0
+    
+    import xlwt
+    # 创建一个workbook 设置编码
+    workbook = xlwt.Workbook(encoding = 'utf-8')
+    # 创建一个worksheet
+    worksheet = workbook.add_sheet('My Worksheet')
+
+    worksheet.write(0,0, label = '身份证号码')
+    worksheet.write(0,1, label = '地址')
+    worksheet.write(0,2, label = '年龄')
+    worksheet.write(0,3, label = '性别')
+    while i < 100:
+        random_sex = random.randint(0, 1)
+        print(str(i)+'    ')
+        id_num = IdNumber.generate_id(random_sex)
+        print(id_num)
+        i = i+1
+        # 写入excel
+        # 参数对应 行, 列, 值
+        worksheet.write(i,0, label = id_num)
+        worksheet.write(i,1, label = IdNumber(id_num).get_area_name())
+        worksheet.write(i,2, label = IdNumber(id_num).get_age())
+        worksheet.write(i,3, label = '男' if IdNumber(id_num).get_sex()==1 else '女')
+    # 保存
+    workbook.save('Excel_test'+str(datetime.now())+'.xls')
+
+
+    # print(IdNumber('410326199507103197').area_id)  # 地址编码:410326
+    # print(IdNumber('410326199507103197').get_area_name())  # 地址:河南省洛阳市汝阳县
+    # print(IdNumber('410326199507103197').get_birthday())  # 生日:1995-7-10
+    # print(IdNumber('410326199507103197').get_age())  # 年龄:23(岁)
+    # print(IdNumber('410326199507103197').get_sex())  # 性别:1(男)
+    # print(IdNumber('410326199507103197').get_check_digit())  # 校验码:7
+    # print(IdNumber.verify_id('410326199507103198'))  # 检验身份证是否正确:False

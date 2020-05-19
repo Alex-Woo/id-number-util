@@ -84,3 +84,5 @@ if __name__ == '__main__':
 ```
 
 [√]: 代码地址: https://github.com/jayknoxqu/id-number-util
+
+此代码来源于网络，略作修改，所有版权属原作者所有。需要可以访问 https://github.com/jayknoxqu/id-number-util
